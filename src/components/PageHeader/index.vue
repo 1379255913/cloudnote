@@ -2,7 +2,6 @@
 defineProps({
     title: {
         type: String,
-        required: true
     },
     title2: {
         type: String,

@@ -55,7 +55,7 @@ api.interceptors.response.use(
                 return Promise.resolve(response.data)
             } else {
                 // 这里做错误提示
-                // ElMessage.error(options)
+                ElMessage.error(response.data.error)
                 return Promise.reject(response.data)
             }
         } else {

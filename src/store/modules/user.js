@@ -1,5 +1,5 @@
 import api from '@/api'
-
+import { ElMessage } from 'element-plus'
 import useRouteStore from './route'
 import useMenuStore from './menu'
 
@@ -11,7 +11,8 @@ const useUserStore = defineStore(
             account: localStorage.account || '',
             token: localStorage.token || '',
             failure_time: localStorage.failure_time || '',
-            permissions: []
+            permissions: [],
+            nickName: localStorage.nickName || ''
         }),
         getters: {
             isLogin: state => {
@@ -28,15 +29,29 @@ const useUserStore = defineStore(
             login(data) {
                 return new Promise((resolve, reject) => {
                     // 通过 mock 进行登录
-                    api.post('member/login', data, {
-                        baseURL: '/mock/'
+                    api.post('user/login', data, {
                     }).then(res => {
-                        localStorage.setItem('account', res.data.account)
+                        localStorage.setItem('account', res.data.user.userName)
                         localStorage.setItem('token', res.data.token)
-                        localStorage.setItem('failure_time', res.data.failure_time)
-                        this.account = res.data.account
+                        localStorage.setItem('nickName', res.data.user.nickName)
+                        localStorage.setItem('failure_time', Math.ceil(new Date().getTime() / 1000) + 24 * 60 * 60)
+                        this.nickName = res.data.user.nickName
+                        this.account = res.data.user.userName
                         this.token = res.data.token
-                        this.failure_time = res.data.failure_time
+                        this.failure_time = Math.ceil(new Date().getTime() / 1000) + 24 * 60 * 60
+                        resolve()
+                    }).catch(error => {
+                        reject(error)
+                    })
+                })
+            },
+            register(data) {
+                console.log(data)
+                return new Promise((resolve, reject) => {
+                    // 通过 mock 进行登录
+                    api.post('user/register', data, {
+                    }).then(res => {
+                        ElMessage.success('注册成功!')
                         resolve()
                     }).catch(error => {
                         reject(error)
@@ -49,10 +64,12 @@ const useUserStore = defineStore(
                     const menuStore = useMenuStore()
                     localStorage.removeItem('account')
                     localStorage.removeItem('token')
+                    localStorage.removeItem('nickName')
                     localStorage.removeItem('failure_time')
                     this.account = ''
                     this.token = ''
                     this.failure_time = ''
+                    this.nickName = ''
                     routeStore.removeRoutes()
                     menuStore.setActived(0)
                     resolve()

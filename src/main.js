@@ -7,7 +7,6 @@ app.use(pinia)
 
 import router from './router'
 app.use(router)
-
 /* importElementPlusPlaceholder */
 
 import globalProperties from '@/util/global.properties'

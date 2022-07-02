@@ -7,7 +7,7 @@ export default {
     name: 'multilevelMenuExample',
     meta: {
         title: '我的文件夹',
-        icon: 'sidebar-menu'
+        icon: 'folder'
     },
     children: [
         {
@@ -15,7 +15,26 @@ export default {
             name: 'multilevelMenuExample1',
             component: () => import('@/views/multilevel_menu_example/page.vue'),
             meta: {
-                title: '导航1'
+                title: 'word',
+                icon:'word'
+            }
+        },
+        {
+            path: 'markdown',
+            name: 'markdown-editor',
+            component: () => import('@/views/multilevel_menu_example/markDown.vue'),
+            meta: {
+                title: 'markDown',
+                icon:'markdown'
+            }
+        },
+        {
+            path: 'code',
+            name: 'code-editor',
+            component: () => import('@/views/multilevel_menu_example/code.vue'),
+            meta: {
+                title: 'code',
+                icon:'code'
             }
         },
         {
@@ -23,7 +42,8 @@ export default {
             name: 'multilevelMenuExample2',
             redirect: '/multilevel_menu_example/level2/page',
             meta: {
-                title: '导航2'
+                title: '导航2',
+                icon: 'folder'
             },
             children: [
                 {
@@ -39,7 +59,8 @@ export default {
                     name: 'multilevelMenuExample2-2',
                     redirect: '/multilevel_menu_example/level2/level3/page1',
                     meta: {
-                        title: '导航2-2'
+                        title: '导航2-2',
+                        icon:'folder'
                     },
                     children: [
                         {

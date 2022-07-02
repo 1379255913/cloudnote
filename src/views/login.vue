@@ -25,12 +25,12 @@ const formType = ref('login')
 
 // 登录
 const loginForm = ref({
-    account: localStorage.login_account || '',
+    userName: localStorage.login_account || '',
     password: '',
     remember: !!localStorage.login_account
 })
 const loginRules = ref({
-    account: [
+    userName: [
         { required: true, trigger: 'blur', message: '请输入用户名' }
     ],
     password: [
@@ -45,7 +45,7 @@ function handleLogin() {
             userStore.login(loginForm.value).then(() => {
                 loading.value = false
                 if (loginForm.value.remember) {
-                    localStorage.setItem('login_account', loginForm.value.account)
+                    localStorage.setItem('login_account', loginForm.value.userName)
                 } else {
                     localStorage.removeItem('login_account')
                 }
@@ -59,58 +59,55 @@ function handleLogin() {
 
 // 注册
 const registerForm = ref({
-    account: '',
-    captcha: '',
+    userName: '',
+    nickName: '',
+    // captcha: '',
     password: '',
-    checkPassword: ''
 })
 const registerRules = ref({
-    account: [
+    userName: [
         { required: true, trigger: 'blur', message: '请输入用户名' }
     ],
-    captcha: [
-        { required: true, trigger: 'blur', message: '请输入验证码' }
+    nickName: [
+        { required: true, trigger: 'blur', message: '请输入昵称' }
     ],
+    // captcha: [
+    //     { required: true, trigger: 'blur', message: '请输入验证码' }
+    // ],
     password: [
         { required: true, trigger: 'blur', message: '请输入密码' },
         { min: 6, max: 18, trigger: 'blur', message: '密码长度为6到18位' }
     ],
-    checkPassword: [
-        { required: true, trigger: 'blur', message: '请再次输入密码' },
-        { validator: (rule, value, callback) => {
-            if (value !== registerForm.password) {
-                callback(new Error('两次输入的密码不一致'))
-            } else {
-                callback()
-            }
-        } }
-    ]
+
 })
 function handleRegister() {
-    ElMessage({
-        message: '注册模块仅提供界面演示，无实际功能，需开发者自行扩展',
-        type: 'warning'
-    })
     proxy.$refs.registerFormRef.validate(valid => {
         if (valid) {
             // 这里编写业务代码
+            loading.value = true
+            userStore.register(registerForm.value).then(() => {
+                loading.value = false
+                formType.value = 'login'
+            }).catch(() => {
+                loading.value = false
+            })
         }
     })
 }
 
 // 重置密码
 const resetForm = ref({
-    account: localStorage.login_account || '',
-    captcha: '',
+    userName: localStorage.login_account || '',
+    // captcha: '',
     newPassword: ''
 })
 const resetRules = ref({
-    account: [
+    userName: [
         { required: true, trigger: 'blur', message: '请输入用户名' }
     ],
-    captcha: [
-        { required: true, trigger: 'blur', message: '请输入验证码' }
-    ],
+    // captcha: [
+    //     { required: true, trigger: 'blur', message: '请输入验证码' }
+    // ],
     newPassword: [
         { required: true, trigger: 'blur', message: '请输入新密码' },
         { min: 6, max: 18, trigger: 'blur', message: '密码长度为6到18位' }
@@ -143,8 +140,8 @@ function showPassword() {
     })
 }
 
-function testAccount(account) {
-    loginForm.value.account = account
+function testAccount(userName) {
+    loginForm.value.userName = userName
     loginForm.value.password = '123456'
     handleLogin()
 }
@@ -163,8 +160,8 @@ function testAccount(account) {
                     <h3 class="title">欢迎来到 {{ title }} ! 👋🏻</h3>
                 </div>
                 <div>
-                    <el-form-item prop="account">
-                        <el-input ref="name" v-model="loginForm.account" placeholder="用户名" text tabindex="1" autocomplete="on">
+                    <el-form-item prop="userName">
+                        <el-input ref="name" v-model="loginForm.userName" placeholder="用户名" text tabindex="1" autocomplete="on">
                             <template #prefix>
                                 <el-icon>
                                     <svg-icon name="user" />
@@ -207,8 +204,8 @@ function testAccount(account) {
                     <h3 class="title">探索从这里开始! 🚀</h3>
                 </div>
                 <div>
-                    <el-form-item prop="account">
-                        <el-input ref="name" v-model="registerForm.account" placeholder="用户名" tabindex="1" autocomplete="on">
+                    <el-form-item prop="userName">
+                        <el-input ref="name" v-model="registerForm.userName" placeholder="用户名" tabindex="1" autocomplete="on">
                             <template #prefix>
                                 <el-icon>
                                     <svg-icon name="user" />
@@ -216,15 +213,24 @@ function testAccount(account) {
                             </template>
                         </el-input>
                     </el-form-item>
-                    <el-form-item prop="captcha">
-                        <el-input ref="captcha" v-model="registerForm.captcha" placeholder="验证码" tabindex="2" autocomplete="on">
+<!--                    <el-form-item prop="captcha">-->
+<!--                        <el-input ref="captcha" v-model="registerForm.captcha" placeholder="验证码" tabindex="2" autocomplete="on">-->
+<!--                            <template #prefix>-->
+<!--                                <el-icon>-->
+<!--                                    <svg-icon name="captcha" />-->
+<!--                                </el-icon>-->
+<!--                            </template>-->
+<!--                            <template #append>-->
+<!--                                <el-button>发送验证码</el-button>-->
+<!--                            </template>-->
+<!--                        </el-input>-->
+<!--                    </el-form-item>-->
+                    <el-form-item prop="nickName">
+                        <el-input ref="name" v-model="registerForm.nickName" placeholder="昵称" tabindex="2" autocomplete="on">
                             <template #prefix>
                                 <el-icon>
-                                    <svg-icon name="captcha" />
+                                    <svg-icon name="user" />
                                 </el-icon>
-                            </template>
-                            <template #append>
-                                <el-button>发送验证码</el-button>
                             </template>
                         </el-input>
                     </el-form-item>
@@ -242,20 +248,20 @@ function testAccount(account) {
                             </template>
                         </el-input>
                     </el-form-item>
-                    <el-form-item prop="checkPassword">
-                        <el-input ref="checkPassword" v-model="registerForm.checkPassword" :type="passwordType" placeholder="确认密码" tabindex="4" autocomplete="on">
-                            <template #prefix>
-                                <el-icon>
-                                    <svg-icon name="password" />
-                                </el-icon>
-                            </template>
-                            <template #suffix>
-                                <el-icon>
-                                    <svg-icon :name="passwordType === 'password' ? 'eye' : 'eye-open'" @click="showPassword" />
-                                </el-icon>
-                            </template>
-                        </el-input>
-                    </el-form-item>
+<!--                    <el-form-item prop="checkPassword">-->
+<!--                        <el-input ref="checkPassword" v-model="registerForm.checkPassword" :type="passwordType" placeholder="确认密码" tabindex="4" autocomplete="on">-->
+<!--                            <template #prefix>-->
+<!--                                <el-icon>-->
+<!--                                    <svg-icon name="password" />-->
+<!--                                </el-icon>-->
+<!--                            </template>-->
+<!--                            <template #suffix>-->
+<!--                                <el-icon>-->
+<!--                                    <svg-icon :name="passwordType === 'password' ? 'eye' : 'eye-open'" @click="showPassword" />-->
+<!--                                </el-icon>-->
+<!--                            </template>-->
+<!--                        </el-input>-->
+<!--                    </el-form-item>-->
                 </div>
                 <el-button :loading="loading" type="primary" size="large" style="width: 100%; margin-top: 20px;" @click.prevent="handleRegister">注册</el-button>
                 <div class="sub-link">
@@ -268,8 +274,8 @@ function testAccount(account) {
                     <h3 class="title">忘记密码了? 🔒</h3>
                 </div>
                 <div>
-                    <el-form-item prop="account">
-                        <el-input ref="name" v-model="resetForm.account" placeholder="用户名" tabindex="1" autocomplete="on">
+                    <el-form-item prop="userName">
+                        <el-input ref="name" v-model="resetForm.userName" placeholder="用户名" tabindex="1" autocomplete="on">
                             <template #prefix>
                                 <el-icon>
                                     <svg-icon name="user" />
@@ -277,18 +283,18 @@ function testAccount(account) {
                             </template>
                         </el-input>
                     </el-form-item>
-                    <el-form-item prop="captcha">
-                        <el-input ref="captcha" v-model="resetForm.captcha" placeholder="验证码" tabindex="2" autocomplete="on">
-                            <template #prefix>
-                                <el-icon>
-                                    <svg-icon name="captcha" />
-                                </el-icon>
-                            </template>
-                            <template #append>
-                                <el-button>发送验证码</el-button>
-                            </template>
-                        </el-input>
-                    </el-form-item>
+<!--                    <el-form-item prop="captcha">-->
+<!--                        <el-input ref="captcha" v-model="resetForm.captcha" placeholder="验证码" tabindex="2" autocomplete="on">-->
+<!--                            <template #prefix>-->
+<!--                                <el-icon>-->
+<!--                                    <svg-icon name="captcha" />-->
+<!--                                </el-icon>-->
+<!--                            </template>-->
+<!--                            <template #append>-->
+<!--                                <el-button>发送验证码</el-button>-->
+<!--                            </template>-->
+<!--                        </el-input>-->
+<!--                    </el-form-item>-->
                     <el-form-item prop="newPassword">
                         <el-input ref="newPassword" v-model="resetForm.newPassword" :type="passwordType" placeholder="新密码" tabindex="3" autocomplete="on">
                             <template #prefix>

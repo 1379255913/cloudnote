@@ -16,14 +16,25 @@
         "preinstall": "npx only-allow pnpm"
     },
     "dependencies": {
+        "@codemirror/autocomplete": "^6.0.2",
+        "@codemirror/gutter": "^0.19.9",
+        "@codemirror/lang-cpp": "^6.0.1",
+        "@codemirror/lang-java": "^6.0.0",
+        "@codemirror/lang-javascript": "^6.0.1",
+        "@codemirror/lang-python": "^6.0.0",
+        "@codemirror/theme-one-dark": "^6.0.0",
         "@tinymce/tinymce-vue": "^5.0.0",
         "@vueuse/core": "^8.7.4",
         "@vueuse/integrations": "^8.7.4",
         "axios": "^0.27.2",
+        "codemirror": "^6.0.0",
+        "compressorjs": "^1.1.1",
         "dayjs": "^1.11.3",
         "element-plus": "^2.2.6",
         "hotkeys-js": "^3.9.4",
+        "image-compressor": "^2.0.3",
         "js-cookie": "^3.0.1",
+        "mavon-editor": "3.0.0-beta",
         "mitt": "^3.0.0",
         "mockjs": "^1.1.0",
         "nprogress": "^0.2.0",
@@ -33,6 +44,7 @@
         "qs": "^6.10.5",
         "tinymce": "^6.0.3",
         "vue": "^3.2.37",
+        "vue-codemirror": "^6.0.0",
         "vue-router": "^4.0.16"
     },
     "devDependencies": {

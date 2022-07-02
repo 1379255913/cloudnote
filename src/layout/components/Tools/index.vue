@@ -70,7 +70,7 @@ function userCommand(command) {
                         <svg-icon name="ep:user-filled" />
                     </el-icon>
                 </el-avatar>
-                {{ userStore.account }}
+                {{ userStore.nickName }}
                 <el-icon>
                     <svg-icon name="ep:caret-bottom" />
                 </el-icon>

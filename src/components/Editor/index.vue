@@ -17,7 +17,7 @@ import 'tinymce/plugins/table'
 import 'tinymce/plugins/wordcount'
 import 'tinymce/plugins/code'
 import 'tinymce/plugins/searchreplace'
-
+import {tinymceUpload} from '@/api-store/uploadImage'
 import useSettingsStore from '@/store/modules/settings'
 
 const settingsStore = useSettingsStore()
@@ -47,9 +47,10 @@ const defaultSetting = ref({
     min_height:900,
     selector: 'textarea',
     plugins: 'autolink autoresize fullscreen image insertdatetime link lists media preview table wordcount code searchreplace',
-    toolbar: 'undo redo | blocks | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | forecolor backcolor removeformat | link image media table insertdatetime searchreplace | preview code fullscreen',
+    toolbar: 'undo redo | blocks | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | forecolor backcolor removeformat | link image table insertdatetime searchreplace | preview code fullscreen',
     branding: false,
     menubar: false,
+    paste_data_images: true,
     custom_undo_redo_levels: 30,
     toolbar_mode: 'sliding',
     insertdatetime_formats: [
@@ -58,10 +59,18 @@ const defaultSetting = ref({
         '%Y-%m-%d',
         '%H:%M:%S'
     ],
-    images_upload_handler: (blobInfo, success) => {
-        const img = 'data:image/jpeg;base64,' + blobInfo.base64()
-        success(img)
-    }
+    images_upload_handler: (blobInfo, progress) =>
+        new Promise((resolve, reject) =>{
+        console.log(blobInfo.blob())
+        tinymceUpload(blobInfo.blob()).then(res=>{
+            console.log(res)
+            // 编辑器的上传图片内容被处理为<img src="success方法里面的参数" />
+            resolve(res)
+        }).catch((e)=> {
+            reject(e)
+        })
+            // 调接口，上传图片
+    })
 })
 
 const myValue = ref(props.modelValue)

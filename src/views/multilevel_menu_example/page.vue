@@ -35,9 +35,7 @@
             </el-dropdown>
         </page-header>
         </el-affix>
-
-                <Editor v-model="text" class="find"></Editor>
-
+        <Editor v-model="text" class="find"></Editor>
 
     </div>
 </template>
